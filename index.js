@@ -47,7 +47,15 @@ bot.command('today', async (ctx) => {
     }
 })
 
-bot.help((ctx) => ctx.reply(text.commands));
+/*(bot.command('week', async (ctx) => {
+    try {
+        await ctx.reply
+    } catch(e) {
+        console.error(e);
+    }
+})*/
+
+bot.help((ctx) => ctx.reply(text.commands.commands));
 
 bot.launch();
 
