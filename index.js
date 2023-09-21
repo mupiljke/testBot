@@ -5,7 +5,7 @@ const {
 require('dotenv').config();
 const text = require('./const');
 const bot = new Telegraf(process.env.BOT_TOKEN);
-let temp = '10100';
+let temp = '101001';
 let previousDate = new Date();
 
 function checkDate() {
@@ -55,7 +55,7 @@ bot.command('today', async (ctx) => {
     }
 })*/
 
-bot.help((ctx) => ctx.reply(text.commands.commands));
+bot.help((ctx) => ctx.reply(text.commands));
 
 bot.launch();
 
