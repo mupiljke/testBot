@@ -35,8 +35,13 @@ function checkCar() {
 bot.start((ctx) => ctx.reply(`Здарово, ${ctx.message.from.first_name ? ctx.message.from.first_name : 'Привет, ноунейм'}`));
 bot.command('today', async (ctx) => {
     try {
-        checkDate();
+        const currentDate = new Date();
+        if (currentDate.getDate() !== previousDate.getDate()) {
+            previousDate = currentDate;
+            checkCar() ? temp += '1' : temp += '0';
+        };
         await ctx.reply(`Сегодня ${previousDate.getDate()}.${previousDate.getMonth()}.${previousDate.getFullYear()} \n${temp.slice(-1) === '1' ? 'Едем на цефире' : 'Едем на пазике'}`);
+        //await ctx.reply(`Сегодня ${previousDate.getDate()}.${previousDate.getMonth()}.${previousDate.getFullYear()} \n${temp.slice(-1) === '1' ? 'Едем на цефире' : 'Едем на пазике'}`);
         //await ctx.replyWithPhoto({source: './img/jan.jpg'}, {caption: 'qwe'})
         //await ctx.reply(`Сегодня ${day}.${text.day.getMonth()}.${text.day.getFullYear()} \n${(day % 4 === 0 || (day - 2) % 4 === 0) ? ('Едем на цефире') : ('Едем на автобусе')}`)
         /*if (day % 4 === 0 || (day - 2) % 4 === 0) {
