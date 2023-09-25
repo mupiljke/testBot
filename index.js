@@ -4,22 +4,15 @@ const {
 } = require('telegraf');
 require('dotenv').config();
 const text = require('./const');
+const {getISOWeek} = require('date-fns');
 const bot = new Telegraf(process.env.BOT_TOKEN);
-let temp = '1010010';
+let temp = '101001010';
 let previousDate = new Date();
 
-function checkDate() {
-    let currentDate = new Date();
+const buttonWeek = Markup.button.callback('Следующая неделя', 'callbackButton');
+const keyboard = Markup.inlineKeyboard([buttonWeek]);
 
-    if (currentDate.getDate() !== previousDate.getDate()) {
-        previousDate = currentDate;
-        checkCar() ? temp += '1' : temp += '0';
-    };
-
-    setTimeout(checkDate, 3600);
-};
-
-function checkCar() {
+function checkCar(temp) {
     switch (temp.substring(temp.length - 4, temp.length)) {
         case '1010':
             return false;
@@ -32,35 +25,59 @@ function checkCar() {
     };  
 };
 
+function checkWeek(ctx, tempDate) {
+        const currentWeek = getISOWeek(tempDate);
+        let days = '', tempTable = temp;
+
+        do {
+            if (checkCar(tempTable)) {
+                days += `${tempDate.getDate()}.${tempDate.getMonth() + 1}.${tempDate.getFullYear()}; `
+                tempTable += '1';
+            } else {tempTable += '0'}
+            tempDate.setDate(tempDate.getDate() + 1);
+        } while (getISOWeek(tempDate) == currentWeek);
+
+        return days
+};
+
 bot.start((ctx) => ctx.reply(`Здарово, ${ctx.message.from.first_name ? ctx.message.from.first_name : 'Привет, ноунейм'}`));
-bot.command('today', async (ctx) => {
+
+bot.command('today', (ctx) => {
     try {
         const currentDate = new Date();
+
         if (currentDate.getDate() !== previousDate.getDate()) {
             previousDate = currentDate;
-            checkCar() ? temp += '1' : temp += '0';
+            checkCar(temp) ? temp += '1' : temp += '0';
+
+            if (temp.length > 8) {
+                temp = temp.slice(temp.length - 8);
+                console.log(temp);
+            }
         };
-        await ctx.reply(`Сегодня ${previousDate.getDate()}.${previousDate.getMonth()}.${previousDate.getFullYear()} \n${temp.slice(-1) === '1' ? 'Едем на цефире' : 'Едем на пазике'}`);
-        //await ctx.reply(`Сегодня ${previousDate.getDate()}.${previousDate.getMonth()}.${previousDate.getFullYear()} \n${temp.slice(-1) === '1' ? 'Едем на цефире' : 'Едем на пазике'}`);
-        //await ctx.replyWithPhoto({source: './img/jan.jpg'}, {caption: 'qwe'})
-        //await ctx.reply(`Сегодня ${day}.${text.day.getMonth()}.${text.day.getFullYear()} \n${(day % 4 === 0 || (day - 2) % 4 === 0) ? ('Едем на цефире') : ('Едем на автобусе')}`)
-        /*if (day % 4 === 0 || (day - 2) % 4 === 0) {
-            await ctx.reply(`Сегодня ${day}.${text.day.getMonth()}.${text.day.getFullYear()} \nЕдем на цефире`)
-        } else await ctx.reply(`Сегодня ${day}.${text.day.getMonth()}.${text.day.getFullYear()} \nЕдем на автобусе`)*/
+        ctx.reply(`Сегодня ${currentDate.getDate()}.${currentDate.getMonth() + 1}.${currentDate.getFullYear()} \n${temp.slice(-1) === '1' ? 'Едем на цефире' : 'Едем на пазике'}`);
     } catch(e)  {
+        console.error(e);
+    }
+});
+
+bot.command('week', (ctx) => {
+    try {
+        const tempDate = new Date();
+
+        ctx.reply(`На этой недели едем на цефире в следующие даты: \n${checkWeek(ctx, tempDate)}`, keyboard);
+    } catch(e) {
         console.error(e);
     }
 })
 
-/*(bot.command('week', async (ctx) => {
-    try {
-        await ctx.reply
-    } catch(e) {
-        console.error(e);
-    }
-})*/
-
 bot.help((ctx) => ctx.reply(text.commands));
+
+bot.action('callbackButton', (ctx) => {
+    const tempDate = new Date();
+    tempDate.setDate(tempDate.getDate() + 7);
+    ctx.reply(`На следующей недели едем на цефире в следующие даты: \n${checkWeek(ctx, tempDate)}`);
+});
 
 bot.launch();
 
