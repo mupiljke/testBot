@@ -9,6 +9,17 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 let temp = '101001010';
 let previousDate = new Date();
 
+const http = require('http');
+const port = 10000;
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end('Ready!\n');
+});
+server.listen(port, () => {
+  console.log(`Сервер запущен на порту ${port}`);
+});
+
 const buttonWeek = Markup.button.callback('Следующая неделя', 'callbackButton');
 const keyboard = Markup.inlineKeyboard([buttonWeek]);
 
