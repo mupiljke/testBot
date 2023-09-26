@@ -35,7 +35,7 @@ function checkCar(temp) {
     };  
 };
 
-function checkWeek(ctx, tempDate) {
+function checkWeek(ctx, tempDate, temp) {
         const currentWeek = getISOWeek(tempDate);
         let days = '', tempTable = temp;
 
@@ -75,7 +75,7 @@ bot.command('week', (ctx) => {
     try {
         const tempDate = new Date();
 
-        ctx.reply(`На этой недели едем на цефире в следующие даты: \n${checkWeek(ctx, tempDate)}`, keyboard);
+        ctx.reply(`На этой недели едем на цефире в следующие даты: \n${checkWeek(ctx, tempDate, temp)}`, keyboard);
     } catch(e) {
         console.error(e);
     }
@@ -85,11 +85,16 @@ bot.help((ctx) => ctx.reply(text.commands));
 
 bot.action('callbackButton', (ctx) => {
     const tempDate = new Date();
+    let tempTable = temp;
+    
     do {
         tempDate.setDate(tempDate.getDate() + 1);
+        if (checkCar(tempTable)) {
+            tempTable += '1';
+        } else {tempTable += '0'}
     } while (getISOWeek(tempDate) == getISOWeek(previousDate));
     
-    ctx.reply(`На следующей недели едем на цефире в следующие даты: \n${checkWeek(ctx, tempDate)}`);
+    ctx.reply(`На следующей недели едем на цефире в следующие даты: \n${checkWeek(ctx, tempDate, tempTable)}`);
 });
 
 bot.launch();
