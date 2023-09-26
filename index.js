@@ -6,7 +6,7 @@ require('dotenv').config();
 const text = require('./const');
 const {getISOWeek} = require('date-fns');
 const bot = new Telegraf(process.env.BOT_TOKEN);
-let temp = '10100100101';
+let temp = '01001';
 let previousDate = new Date();
 
 const http = require('http');
@@ -61,7 +61,7 @@ bot.command('today', (ctx) => {
             checkCar(temp) ? temp += '1' : temp += '0';
 
             if (temp.length > 8) {
-                temp = temp.slice(temp.length - 8);
+                temp = temp.slice(temp.length - 4);
                 console.log(temp);
             }
         };
