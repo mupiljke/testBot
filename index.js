@@ -6,7 +6,7 @@ require('dotenv').config();
 const text = require('./const');
 const {getISOWeek} = require('date-fns');
 const bot = new Telegraf(process.env.BOT_TOKEN);
-let temp = '10100101001';
+let temp = '10100100101';
 let previousDate = new Date();
 
 const http = require('http');
