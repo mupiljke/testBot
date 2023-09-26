@@ -15,7 +15,7 @@ const server = http.createServer((req, res) => {
   res.setHeader('Content-Type', 'text/plain');
   res.end('Ready!\n');
 });
-server.listen('localhost', () => {
+server.listen('8080', () => {
   console.log(`Сервер запущен на порту ${port}`);
 });
 
