@@ -85,7 +85,10 @@ bot.help((ctx) => ctx.reply(text.commands));
 
 bot.action('callbackButton', (ctx) => {
     const tempDate = new Date();
-    tempDate.setDate(tempDate.getDate() + 7);
+    do {
+        tempDate.setDate(tempDate.getDate() + 1);
+    } while (getISOWeek(tempDate) != getISOWeek(previousDate));
+    
     ctx.reply(`На следующей недели едем на цефире в следующие даты: \n${checkWeek(ctx, tempDate)}`);
 });
 
