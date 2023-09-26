@@ -6,17 +6,16 @@ require('dotenv').config();
 const text = require('./const');
 const {getISOWeek} = require('date-fns');
 const bot = new Telegraf(process.env.BOT_TOKEN);
-let temp = '101001010';
+let temp = '1010010101';
 let previousDate = new Date();
 
 const http = require('http');
-const port = 10000;
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
   res.end('Ready!\n');
 });
-server.listen(port, () => {
+server.listen('localhost', () => {
   console.log(`Сервер запущен на порту ${port}`);
 });
 
