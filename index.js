@@ -16,7 +16,7 @@ const server = http.createServer((req, res) => {
   res.end('Ready!\n');
 });
 server.listen('8080', () => {
-  console.log(`Сервер запущен на порту ${port}`);
+  console.log(`Сервер запущен на порту 8080`);
 });
 
 const buttonWeek = Markup.button.callback('Следующая неделя', 'callbackButton');
