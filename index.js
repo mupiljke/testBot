@@ -87,12 +87,19 @@ bot.action('callbackButton', (ctx) => {
     const tempDate = new Date();
     let tempTable = temp;
     
-    do {
+    while (getISOWeek(tempDate) == getISOWeek(previousDate)) {
         tempDate.setDate(tempDate.getDate() + 1);
         if (checkCar(tempTable)) {
             tempTable += '1';
         } else {tempTable += '0'}
-    } while (getISOWeek(tempDate) == getISOWeek(previousDate));
+    }
+
+    /*do {
+        tempDate.setDate(tempDate.getDate() + 1);
+        if (checkCar(tempTable)) {
+            tempTable += '1';
+        } else {tempTable += '0'}
+    } while (getISOWeek(tempDate) == getISOWeek(previousDate));*/
     
     ctx.reply(`На следующей недели едем на цефире в следующие даты: \n${checkWeek(ctx, tempDate, tempTable)}`);
 });
