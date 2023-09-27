@@ -19,7 +19,7 @@ server.listen('8080', () => {
     console.log(`Сервер запущен на порту 8080`);
 });
 
-const buttonWeek = Markup.button.callback('Следующая неделя', 'nextWeek');
+const buttonWeek = Markup.button.callback('Следующая неделя', 'callbackButton');
 const keyboard = Markup.inlineKeyboard([buttonWeek]);
 
 function checkCar(temp) {
@@ -86,7 +86,7 @@ bot.command('week', (ctx) => {
 
 bot.help((ctx) => ctx.reply(text.commands));
 
-bot.action('nextWeek', (ctx) => {
+bot.action('callbackButton', (ctx) => {
     const tempDate = new Date();
     let tempTable = temp;
     
