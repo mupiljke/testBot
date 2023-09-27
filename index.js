@@ -6,17 +6,17 @@ require('dotenv').config();
 const text = require('./const');
 const {getISOWeek} = require('date-fns');
 const bot = new Telegraf(process.env.BOT_TOKEN);
-let temp = '01001';
+let temp = '101001010010';
 let previousDate = new Date();
 
 const http = require('http');
 const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Ready!\n');
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Ready!\n');
 });
 server.listen('8080', () => {
-  console.log(`Сервер запущен на порту 8080`);
+    console.log(`Сервер запущен на порту 8080`);
 });
 
 const buttonWeek = Markup.button.callback('Следующая неделя', 'callbackButton');
@@ -35,17 +35,21 @@ function checkCar(temp) {
     };  
 };
 
-function checkWeek(ctx, tempDate, temp) {
+function checkWeek(ctx, tempDate) {
         const currentWeek = getISOWeek(tempDate);
         let days = '', tempTable = temp;
 
-        do {
+        while (getISOWeek(tempDate) == currentWeek) {
             if (checkCar(tempTable)) {
-                days += `${tempDate.getDate()}.${tempDate.getMonth() + 1}.${tempDate.getFullYear()}; `
+                tempDate.setDate(tempDate.getDate() + 1);
+                days += `${tempDate.getDate()}.${tempDate.getMonth() + 1}.${tempDate.getFullYear()}; `;
                 tempTable += '1';
-            } else {tempTable += '0'}
-            tempDate.setDate(tempDate.getDate() + 1);
-        } while (getISOWeek(tempDate) == currentWeek);
+            } else {
+                tempTable += '0';
+                tempDate.setDate(tempDate.getDate() + 1);
+            }
+            
+        }
 
         return days
 };
@@ -73,9 +77,8 @@ bot.command('today', (ctx) => {
 
 bot.command('week', (ctx) => {
     try {
-        const tempDate = new Date();
-
-        ctx.reply(`На этой недели едем на цефире в следующие даты: \n${checkWeek(ctx, tempDate, temp)}`, keyboard);
+        const tmpDate = new Date();
+        ctx.reply(`На этой неделе едем на цефире в следующие даты: \n${checkWeek(ctx, tmpDate)}`, keyboard);
     } catch(e) {
         console.error(e);
     }
@@ -88,20 +91,13 @@ bot.action('callbackButton', (ctx) => {
     let tempTable = temp;
     
     while (getISOWeek(tempDate) == getISOWeek(previousDate)) {
-        tempDate.setDate(tempDate.getDate() + 1);
         if (checkCar(tempTable)) {
             tempTable += '1';
         } else {tempTable += '0'}
+        tempDate.setDate(tempDate.getDate() + 1);
     }
-
-    /*do {
-        tempDate.setDate(tempDate.getDate() + 1);
-        if (checkCar(tempTable)) {
-            tempTable += '1';
-        } else {tempTable += '0'}
-    } while (getISOWeek(tempDate) == getISOWeek(previousDate));*/
     
-    ctx.reply(`На следующей недели едем на цефире в следующие даты: \n${checkWeek(ctx, tempDate, tempTable)}`);
+    ctx.reply(`На следующей неделе едем на цефире в следующие даты: \n${checkWeek(ctx, tempDate)}`);
 });
 
 bot.launch();
