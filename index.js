@@ -19,7 +19,7 @@ server.listen('8080', () => {
     console.log(`Сервер запущен на порту 8080`);
 });
 
-const buttonWeek = Markup.button.callback('Следующая неделя', 'callbackButton');
+const buttonWeek = Markup.button.callback('Следующая неделя', 'nextWeek');
 const keyboard = Markup.inlineKeyboard([buttonWeek]);
 
 function checkCar(temp) {
@@ -86,7 +86,7 @@ bot.command('week', (ctx) => {
 
 bot.help((ctx) => ctx.reply(text.commands));
 
-bot.action('callbackButton', (ctx) => {
+bot.action('nextWeek', (ctx) => {
     const tempDate = new Date();
     let tempTable = temp;
     
@@ -98,6 +98,7 @@ bot.action('callbackButton', (ctx) => {
     }
     
     ctx.reply(`На следующей неделе едем на цефире в следующие даты: \n${checkWeek(ctx, tempDate)}`);
+    ctx.answerCbQuery();
 });
 
 bot.launch();
